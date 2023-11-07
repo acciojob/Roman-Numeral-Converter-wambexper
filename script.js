@@ -1,36 +1,46 @@
 function convertToRoman(num) {
-  const romanNumerals = [
-    { value: 100000, numeral: "C̅" },
-    { value: 10000, numeral: "X̅" },
-    { value: 5000, numeral: "V̅" },
-    { value: 1000, numeral: "M" },
-    { value: 900, numeral: "CM" },
-    { value: 500, numeral: "D" },
-    { value: 400, numeral: "CD" },
-    { value: 100, numeral: "C" },
-    { value: 90, numeral: "XC" },
-    { value: 50, numeral: "L" },
-    { value: 40, numeral: "XL" },
-    { value: 10, numeral: "X" },
-    { value: 9, numeral: "IX" },
-    { value: 5, numeral: "V" },
-    { value: 4, numeral: "IV" },
-    { value: 1, numeral: "I" }
-  ];
+  const obj = {
+    0: ['M', 1000],
+    1: ['D', 500],
+    2: ['C', 100],
+    3: ['L', 50],
+    4: ['X', 10],
+    5: ['V', 5],
+    6: ['I', 1]
+  };
 
-  let roman = "";
+  let roman = '';
 
-  for (const numeral of romanNumerals) {
-    while (num >= numeral.value) {
-      roman += numeral.numeral;
-      num -= numeral.value;
+  for (let i = 0; i < 7; i++) {
+    while (num >= obj[i][1]) {
+      roman += obj[i][0];
+      num -= obj[i][1];
+    }
+
+    if (i % 2 === 0 && i < 6) {
+      const nextValue = obj[i + 2][1];
+      if (num >= obj[i][1] - nextValue) {
+        roman += obj[i + 2][0] + obj[i][0];
+        num -= obj[i][1] - nextValue;
+      }
+    } else if (i % 2 === 1 && i < 6) {
+      const nextValue = obj[i + 1][1];
+      if (num >= obj[i][1] - nextValue) {
+        roman += obj[i + 1][0] + obj[i][0];
+        num -= obj[i][1] - nextValue;
+      }
     }
   }
 
   return roman;
 }
 
-// Example usage:
-console.log(convertToRoman(14)); // Output: "XIV"
-console.log(convertToRoman(798)); // Output: "DCCXCVIII"
+const userInput = prompt('Enter a number to convert to a Roman numeral:');
+const num = parseInt(userInput, 10);
 
+if (!isNaN(num) && num >= 0 && num <= 100000) {
+  const romanNumeral = convertToRoman(num);
+  alert(`The Roman numeral for ${num} is: ${romanNumeral}`);
+} else {
+  alert('Invalid input. Please enter a number between 0 and 100000.');
+}
